@@ -7,10 +7,11 @@ import SearchResults from './components/SearchResults';
 import ActiveItemList from './components/ActiveItems';
 
 function App() {
-  const [itemNames, fetchItemNames] = useState([]);
+  const [itemNames, fetchItemNames] = useState(loadLocalStorage("itemNames") ?? []);
   const [activeItemsList, setActiveItems] = useState(loadLocalStorage("shoppinglist") ?? []);
   const [searchInput, setSearchInput] = useState("");
   const [filteredList, setFilteredList] = useState([]);
+  const [language, setLanguage] = useState(true);
 
   const itemApiUrl = "https://fetch-me.vercel.app/api/shopping/items"
 
@@ -21,11 +22,14 @@ function App() {
       let itemNamesArray = data.data;
       fetchItemNames(itemNamesArray);
     }
+    if(itemNames.length === 0){
     fetchResults();
+    }
   }, [])
 
   useEffect(() => {
     setLocalStorage("shoppinglist", activeItemsList);
+    setLocalStorage("itemNames", itemNames);
   }, [activeItemsList])
 
   useEffect(filterItems, [searchInput])
@@ -49,20 +53,32 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Einkaufsliste</h1>
+      
+      <Heading>{language=== true ? "Einkaufsliste" : "Shoppinglist"}</Heading>
+      <LanguageButton onClick={() => setLanguage(!language)}>{language === true ? "English" : "Deutsch"}</LanguageButton>
       <div>
-        <ActiveItemList activeItems={activeItemsList} handleDeactivateItems={onDeactivateItems}/>
+        <ActiveItemList activeItems={activeItemsList} handleDeactivateItems={onDeactivateItems} language={language}/>
       </div>
       <SearchInput onChange={(event)=> setSearchInput(event.target.value)} 
-        name="searchInput" type="text" placeholder='Suche'/>
+        name="searchInput" type="text" placeholder={language === true ? 'Suche' : "Search"}/>
       <SearchContainer>
-        <SearchResults filteredItems={filteredList} handleChooseItem={onChooseItem} />
+        <SearchResults filteredItems={filteredList} handleChooseItem={onChooseItem} language={language}/>
       </SearchContainer>
     </div>
   );
 }
 
 export default App;
+
+const Heading = styled.h1`
+  position: relative;
+`
+
+const LanguageButton = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 50px;
+`
 
 const SearchContainer = styled.div`
   width: 50%;
