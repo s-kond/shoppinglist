@@ -1,14 +1,14 @@
 import './App.css';
 import { useEffect, useState } from 'react';
+import { loadLocalStorage, setLocalStorage } from './lib/localStorage';
 import styled from "styled-components";
 import {search} from "fast-fuzzy";
 import SearchResults from './components/SearchResults';
-import {nanoid} from "nanoid";
 import ActiveItemList from './components/ActiveItems';
 
 function App() {
   const [itemNames, fetchItemNames] = useState([]);
-  const [activeItemsList, setActiveItems] = useState([]);
+  const [activeItemsList, setActiveItems] = useState(loadLocalStorage("shoppinglist") ?? []);
   const [searchInput, setSearchInput] = useState("");
   const [filteredList, setFilteredList] = useState([]);
 
@@ -23,6 +23,10 @@ function App() {
     }
     fetchResults();
   }, [])
+
+  useEffect(() => {
+    setLocalStorage("shoppinglist", activeItemsList);
+  }, [activeItemsList])
 
   useEffect(filterItems, [searchInput])
 
