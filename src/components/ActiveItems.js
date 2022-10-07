@@ -1,9 +1,9 @@
 import {nanoid} from "nanoid";
 import styled from "styled-components"
 
-export default function ActiveItemList({activeItems, handleDeactivateItems}){
+export default function ActiveItemList({activeItems, handleDeactivateItems, language}){
     return (
-    activeItems.map(item => <StyledButton onClick={() => handleDeactivateItems(item)} key={nanoid()}>{item.name.de}</StyledButton>)
+    activeItems.map(item => <StyledButton onClick={() => handleDeactivateItems(item)} key={nanoid()}>{language === true ? item.name.de : item.name.en}</StyledButton>)
     )
 }
 

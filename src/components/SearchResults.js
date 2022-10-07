@@ -1,11 +1,11 @@
 import {nanoid} from "nanoid";
 import styled from "styled-components";
 
-export default function SearchResults({filteredItems, handleChooseItem}){
+export default function SearchResults({filteredItems, handleChooseItem, language}){
     return (
     filteredItems.map(item => <StyledButton onClick={() => {
         /* console.log(item); */
-        handleChooseItem(item)}} key={nanoid()}>{item.name.de}</StyledButton>)
+        handleChooseItem(item)}} key={nanoid()}>{language === true ? item.name.de : item.name.en}</StyledButton>)
     )
 }
 
