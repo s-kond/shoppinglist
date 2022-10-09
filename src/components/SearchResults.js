@@ -1,9 +1,16 @@
 import {nanoid} from "nanoid";
 import styled from "styled-components";
 
-export default function SearchResults({filteredItems, handleChooseItem, language, searchInput}){
+export default function SearchResults({filteredItems, handleChooseItem, language, searchInput, recentlyUsed}){
     if(searchInput === ""){
-        return <p></p>
+        return (
+        <Collapse>
+            <summary>{language === true ? "Zuletzt gekauft" : "Recently used"}</summary>
+            <RecentContainer>{recentlyUsed.map(item => <StyledButton onClick={() => {
+        handleChooseItem(item)}} key={nanoid()}>{language === true ? item.name.de : item.name.en}</StyledButton>)}</RecentContainer>
+        </Collapse>
+        )
+
     } else if (filteredItems.length === 0){
         return <p>{language === true ? "Leider keine Treffer..." : "Sorry, we couldn't find anything..."}</p>
     } else {
@@ -22,4 +29,13 @@ const StyledButton = styled.button`
     &:hover {
         cursor: pointer;
     }
+`
+
+const Collapse = styled.details`
+    text-align: left;
+`
+const RecentContainer = styled.section`
+    display: flex;
+    gap: 5px;
+    padding: 10px;
 `
