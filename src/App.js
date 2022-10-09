@@ -11,6 +11,7 @@ function App() {
   const [activeItemsList, setActiveItems] = useState(loadLocalStorage("shoppinglist") ?? []);
   const [searchInput, setSearchInput] = useState("");
   const [filteredList, setFilteredList] = useState([]);
+  const [recentlyUsed, setRecentlyUsed] = useState([]);
   const [language, setLanguage] = useState(true);
 
   const itemApiUrl = "https://fetch-me.vercel.app/api/shopping/items"
@@ -43,28 +44,31 @@ function App() {
     setActiveItems([...activeItemsList, itemName]);
     setFilteredList(filteredList.filter(item => item.name.de !== itemName.name.de));
     fetchItemNames(itemNames.filter(item => item.name.de !== itemName.name.de));
+    setRecentlyUsed(recentlyUsed.filter(item => item.name.de !== itemName.name.de))
   }
 
   function onDeactivateItems(itemName){
     setActiveItems(activeItemsList.filter(item => item.name.de !== itemName.name.de));
     setFilteredList([itemName, ...filteredList]);
     fetchItemNames([itemName, ...itemNames]);
+    setRecentlyUsed([itemName, ...recentlyUsed])
   }
 
   return (
     <div className="App">
       <HeaderContainer>
-      <Heading>{language=== true ? "Einkaufsliste" : "Shoppinglist"}</Heading>
+      <Heading>{language=== true ? "Einkaufsliste" : "Shopping List"}</Heading>
       <LanguageButton onClick={() => setLanguage(!language)}>{language === true ? <p><strong>DE </strong>| EN</p> : <p>DE | <strong>EN</strong></p>}
       </LanguageButton>
       </HeaderContainer>
       <ItemContainer>
         <ActiveItemList activeItems={activeItemsList} handleDeactivateItems={onDeactivateItems} language={language}/>
       </ItemContainer>
+      {/* <Label htmlFor='searchInput'>{language=== true ? "Was möchtest du kaufen?" : "What do you want to buy?"}</Label> */}
       <SearchInput onChange={(event)=> setSearchInput(event.target.value)} 
-        name="searchInput" type="text" placeholder={language === true ? 'Suche' : "Search"} />
+        name="searchInput" id="searchInput" type="text" placeholder={language === true ? 'Suche' : "Search"} />
       <ItemContainer>
-        <SearchResults filteredItems={filteredList} handleChooseItem={onChooseItem} language={language} searchInput={searchInput}/>
+        <SearchResults filteredItems={filteredList} handleChooseItem={onChooseItem} language={language} searchInput={searchInput} recentlyUsed={recentlyUsed}/>
       </ItemContainer>
     </div>
   );
@@ -87,6 +91,13 @@ const HeaderContainer = styled.div`
   @media (min-width: 370px){
     flex-wrap: nowrap;
   }
+`
+
+const Label = styled.label`
+display: block;
+width: 63%;
+margin: 0 auto;
+text-align: left;
 `
 
 const LanguageButton = styled.button`
