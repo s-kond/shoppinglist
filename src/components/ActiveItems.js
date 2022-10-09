@@ -1,12 +1,25 @@
 import {nanoid} from "nanoid";
-import styled from "styled-components"
+import { useState } from "react";
+import styled from "styled-components";
+import FruitList from "./FruitList";
+import BreadList from "./BreadList";
 
-export default function ActiveItemList({activeItems, handleDeactivateItems, language}){
+export default function ActiveItemList({activeItems, handleDeactivateItems, language, breadArray, fruitArray}){
     return (
-    activeItems.map(item => <StyledButton onClick={() => handleDeactivateItems(item)} key={nanoid()}>{language === true ? item.name.de : item.name.en}</StyledButton>)
-    )
+        <ListContainer>
+        <FruitList fruitArray={fruitArray} language={language} handleDeactivateItems={handleDeactivateItems}/>
+        <BreadList breadArray={breadArray} language={language} handleDeactivateItems={handleDeactivateItems}/>
+        </ListContainer>
+    )        
 }
 
+const ListContainer = styled.section`
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    gap: 20px;
+`
+/* 
 const StyledButton = styled.button`
     background-color: lightblue;
     font-size: 1.3rem;
@@ -17,4 +30,4 @@ const StyledButton = styled.button`
     &:hover {
         cursor: pointer;
     }
-`
+` */

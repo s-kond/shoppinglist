@@ -11,8 +11,10 @@ function App() {
   const [activeItemsList, setActiveItems] = useState(loadLocalStorage("shoppinglist") ?? []);
   const [searchInput, setSearchInput] = useState("");
   const [filteredList, setFilteredList] = useState([]);
-  const [recentlyUsed, setRecentlyUsed] = useState([]);
+  const [recentlyUsed, setRecentlyUsed] = useState(loadLocalStorage("recentlyUsed") ?? []);
   const [language, setLanguage] = useState(true);
+  const [breadArray, setBreadArray] = useState(loadLocalStorage("breadList") ?? []);
+  const [fruitArray, setFruitArray] = useState(loadLocalStorage("fruitList") ?? []);
 
   const itemApiUrl = "https://fetch-me.vercel.app/api/shopping/items"
 
@@ -21,6 +23,7 @@ function App() {
       const response = await fetch(itemApiUrl);
       const data = await response.json();
       let itemNamesArray = data.data;
+      console.log(data);
       fetchItemNames(itemNamesArray);
     }
     if(itemNames.length === 0){
@@ -31,6 +34,9 @@ function App() {
   useEffect(() => {
     setLocalStorage("shoppinglist", activeItemsList);
     setLocalStorage("itemNames", itemNames);
+    setLocalStorage("breadList", breadArray);
+    setLocalStorage("fruitList", fruitArray);
+    setLocalStorage("recentlyUsed", recentlyUsed)
   }, [activeItemsList])
 
   useEffect(filterItems, [searchInput])
@@ -41,13 +47,22 @@ function App() {
   }
 
   function onChooseItem(itemName){
+    if(itemName.category._ref === "c2hvcHBpbmcuY2F0ZWdvcnk6MA=="){
+      setFruitArray([itemName, ...fruitArray])}
+    if(itemName.category._ref === "c2hvcHBpbmcuY2F0ZWdvcnk6MQ=="){
+      setBreadArray([itemName, ...breadArray])};
     setActiveItems([...activeItemsList, itemName]);
     setFilteredList(filteredList.filter(item => item.name.de !== itemName.name.de));
     fetchItemNames(itemNames.filter(item => item.name.de !== itemName.name.de));
-    setRecentlyUsed(recentlyUsed.filter(item => item.name.de !== itemName.name.de))
+    setRecentlyUsed(recentlyUsed.filter(item => item.name.de !== itemName.name.de));
+    setSearchInput("");
   }
 
   function onDeactivateItems(itemName){
+    if(itemName.category._ref === "c2hvcHBpbmcuY2F0ZWdvcnk6MA=="){
+      setFruitArray(fruitArray.filter(item => item.name.de !== itemName.name.de))}
+    if(itemName.category._ref === "c2hvcHBpbmcuY2F0ZWdvcnk6MQ=="){
+      setBreadArray(breadArray.filter(item => item.name.de !== itemName.name.de))};
     setActiveItems(activeItemsList.filter(item => item.name.de !== itemName.name.de));
     setFilteredList([itemName, ...filteredList]);
     fetchItemNames([itemName, ...itemNames]);
@@ -62,11 +77,11 @@ function App() {
       </LanguageButton>
       </HeaderContainer>
       <ItemContainer>
-        <ActiveItemList activeItems={activeItemsList} handleDeactivateItems={onDeactivateItems} language={language}/>
+        <ActiveItemList activeItems={activeItemsList} handleDeactivateItems={onDeactivateItems} language={language} breadArray={breadArray} fruitArray={fruitArray}/>
       </ItemContainer>
       {/* <Label htmlFor='searchInput'>{language=== true ? "Was möchtest du kaufen?" : "What do you want to buy?"}</Label> */}
       <SearchInput onChange={(event)=> setSearchInput(event.target.value)} 
-        name="searchInput" id="searchInput" type="text" placeholder={language === true ? 'Suche' : "Search"} />
+        name="searchInput" id="searchInput" type="text" placeholder={language === true ? 'Suche' : "Search"} value={searchInput}/>
       <ItemContainer>
         <SearchResults filteredItems={filteredList} handleChooseItem={onChooseItem} language={language} searchInput={searchInput} recentlyUsed={recentlyUsed}/>
       </ItemContainer>
@@ -93,12 +108,12 @@ const HeaderContainer = styled.div`
   }
 `
 
-const Label = styled.label`
+/* const Label = styled.label`
 display: block;
 width: 63%;
 margin: 0 auto;
 text-align: left;
-`
+` */
 
 const LanguageButton = styled.button`
   background-color: transparent;
@@ -110,7 +125,7 @@ const LanguageButton = styled.button`
 
 const ItemContainer = styled.div`
   width: 65%;
-  margin: 20px auto;
+  margin: 30px auto;
   display: flex;
   justify-content: left;
   flex-wrap: wrap;
