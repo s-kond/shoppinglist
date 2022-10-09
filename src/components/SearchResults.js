@@ -1,12 +1,16 @@
 import {nanoid} from "nanoid";
 import styled from "styled-components";
 
-export default function SearchResults({filteredItems, handleChooseItem, language}){
-    return (
-    filteredItems.map(item => <StyledButton onClick={() => {
-        /* console.log(item); */
+export default function SearchResults({filteredItems, handleChooseItem, language, searchInput}){
+    if(searchInput === ""){
+        return <p></p>
+    } else if (filteredItems.length === 0){
+        return <p>{language === true ? "Leider keine Treffer..." : "Sorry, we couldn't find anything..."}</p>
+    } else {
+    return (filteredItems.map(item => <StyledButton onClick={() => {
         handleChooseItem(item)}} key={nanoid()}>{language === true ? item.name.de : item.name.en}</StyledButton>)
-    )
+    )}
+
 }
 
 const StyledButton = styled.button`
@@ -14,4 +18,8 @@ const StyledButton = styled.button`
     font-size: 1.3rem;
     border-radius: 10px;
     border: unset;
+
+    &:hover {
+        cursor: pointer;
+    }
 `
