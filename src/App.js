@@ -13,8 +13,8 @@ function App() {
   const [filteredList, setFilteredList] = useState([]);
   const [recentlyUsed, setRecentlyUsed] = useState(loadLocalStorage("recentlyUsed") ?? []);
   const [language, setLanguage] = useState(true);
-  const [breadArray, setBreadArray] = useState([]);
-  const [fruitArray, setFruitArray] = useState([]);
+  const [breadArray, setBreadArray] = useState(loadLocalStorage("breadList") ?? []);
+  const [fruitArray, setFruitArray] = useState(loadLocalStorage("fruitList") ?? []);
 
   const itemApiUrl = "https://fetch-me.vercel.app/api/shopping/items"
 
@@ -34,6 +34,8 @@ function App() {
   useEffect(() => {
     setLocalStorage("shoppinglist", activeItemsList);
     setLocalStorage("itemNames", itemNames);
+    setLocalStorage("breadList", breadArray);
+    setLocalStorage("fruitList", fruitArray);
     setLocalStorage("recentlyUsed", recentlyUsed)
   }, [activeItemsList])
 
@@ -57,6 +59,10 @@ function App() {
   }
 
   function onDeactivateItems(itemName){
+    if(itemName.category._ref === "c2hvcHBpbmcuY2F0ZWdvcnk6MA=="){
+      setFruitArray(fruitArray.filter(item => item.name.de !== itemName.name.de))}
+    if(itemName.category._ref === "c2hvcHBpbmcuY2F0ZWdvcnk6MQ=="){
+      setBreadArray(breadArray.filter(item => item.name.de !== itemName.name.de))};
     setActiveItems(activeItemsList.filter(item => item.name.de !== itemName.name.de));
     setFilteredList([itemName, ...filteredList]);
     fetchItemNames([itemName, ...itemNames]);
@@ -119,7 +125,7 @@ const LanguageButton = styled.button`
 
 const ItemContainer = styled.div`
   width: 65%;
-  margin: 20px auto;
+  margin: 30px auto;
   display: flex;
   justify-content: left;
   flex-wrap: wrap;

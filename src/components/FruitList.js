@@ -5,7 +5,7 @@ export default function FruitList({fruitArray, handleDeactivateItems, language})
 if (fruitArray.length > 0){
     return (
         <Details open>
-            <summary>Fruits & Vegetables</summary>
+            <summary>{language === true ? "Früchte & Gemüse" : "Fruits & Vegetables"}</summary>
             <section>{fruitArray.map(item => <StyledButton onClick={() => handleDeactivateItems(item)} key={nanoid()}
             >{language === true ? item.name.de : item.name.en}</StyledButton>)}</section>
         </Details>

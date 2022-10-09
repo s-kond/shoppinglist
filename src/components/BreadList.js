@@ -5,7 +5,7 @@ export default function BreadList({breadArray, handleDeactivateItems, language})
     if (breadArray.length > 0){
         return (
             <Details open>
-                <summary>Bread & Pastries</summary>
+                <summary>{language === true ? "Brot & Gebäck" : "Bread & Pastries"}</summary>
                 <section>{breadArray.map(item => <StyledButton onClick={() => handleDeactivateItems(item)} key={nanoid()}
                 >{language === true ? item.name.de : item.name.en}</StyledButton>)}</section>
             </Details>

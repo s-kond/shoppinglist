@@ -7,10 +7,9 @@ export default function SearchResults({filteredItems, handleChooseItem, language
         <Collapse>
             <summary>{language === true ? "Zuletzt gekauft" : "Recently used"}</summary>
             <RecentContainer>{recentlyUsed.map(item => <StyledButton onClick={() => {
-        handleChooseItem(item)}} key={nanoid()}>{language === true ? item.name.de : item.name.en}</StyledButton>)}</RecentContainer>
+        handleChooseItem(item)}} key={nanoid()} style={{backgroundColor: "orange"}}>{language === true ? item.name.de : item.name.en}</StyledButton>)}</RecentContainer>
         </Collapse>
         )
-
     } else if (filteredItems.length === 0){
         return <p>{language === true ? "Leider keine Treffer..." : "Sorry, we couldn't find anything..."}</p>
     } else {
