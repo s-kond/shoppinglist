@@ -11,7 +11,7 @@ function App() {
   const [activeItemsList, setActiveItems] = useState(loadLocalStorage("shoppinglist") ?? []);
   const [searchInput, setSearchInput] = useState("");
   const [filteredList, setFilteredList] = useState([]);
-  const [recentlyUsed, setRecentlyUsed] = useState([]);
+  const [recentlyUsed, setRecentlyUsed] = useState(loadLocalStorage("recentlyUsed") ?? []);
   const [language, setLanguage] = useState(true);
 
   const itemApiUrl = "https://fetch-me.vercel.app/api/shopping/items"
@@ -31,6 +31,7 @@ function App() {
   useEffect(() => {
     setLocalStorage("shoppinglist", activeItemsList);
     setLocalStorage("itemNames", itemNames);
+    setLocalStorage("recentlyUsed", recentlyUsed)
   }, [activeItemsList])
 
   useEffect(filterItems, [searchInput])
@@ -44,7 +45,8 @@ function App() {
     setActiveItems([...activeItemsList, itemName]);
     setFilteredList(filteredList.filter(item => item.name.de !== itemName.name.de));
     fetchItemNames(itemNames.filter(item => item.name.de !== itemName.name.de));
-    setRecentlyUsed(recentlyUsed.filter(item => item.name.de !== itemName.name.de))
+    setRecentlyUsed(recentlyUsed.filter(item => item.name.de !== itemName.name.de));
+    setSearchInput("");
   }
 
   function onDeactivateItems(itemName){
@@ -66,7 +68,7 @@ function App() {
       </ItemContainer>
       {/* <Label htmlFor='searchInput'>{language=== true ? "Was möchtest du kaufen?" : "What do you want to buy?"}</Label> */}
       <SearchInput onChange={(event)=> setSearchInput(event.target.value)} 
-        name="searchInput" id="searchInput" type="text" placeholder={language === true ? 'Suche' : "Search"} />
+        name="searchInput" id="searchInput" type="text" placeholder={language === true ? 'Suche' : "Search"} value={searchInput}/>
       <ItemContainer>
         <SearchResults filteredItems={filteredList} handleChooseItem={onChooseItem} language={language} searchInput={searchInput} recentlyUsed={recentlyUsed}/>
       </ItemContainer>
@@ -93,12 +95,12 @@ const HeaderContainer = styled.div`
   }
 `
 
-const Label = styled.label`
+/* const Label = styled.label`
 display: block;
 width: 63%;
 margin: 0 auto;
 text-align: left;
-`
+` */
 
 const LanguageButton = styled.button`
   background-color: transparent;
