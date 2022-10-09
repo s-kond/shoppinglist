@@ -53,17 +53,19 @@ function App() {
 
   return (
     <div className="App">
-      
+      <HeaderContainer>
       <Heading>{language=== true ? "Einkaufsliste" : "Shoppinglist"}</Heading>
-      <LanguageButton onClick={() => setLanguage(!language)}>{language === true ? "English" : "Deutsch"}</LanguageButton>
-      <div>
+      <LanguageButton onClick={() => setLanguage(!language)}>{language === true ? <p><strong>DE </strong>| EN</p> : <p>DE | <strong>EN</strong></p>}
+      </LanguageButton>
+      </HeaderContainer>
+      <ItemContainer>
         <ActiveItemList activeItems={activeItemsList} handleDeactivateItems={onDeactivateItems} language={language}/>
-      </div>
+      </ItemContainer>
       <SearchInput onChange={(event)=> setSearchInput(event.target.value)} 
-        name="searchInput" type="text" placeholder={language === true ? 'Suche' : "Search"}/>
-      <SearchContainer>
-        <SearchResults filteredItems={filteredList} handleChooseItem={onChooseItem} language={language}/>
-      </SearchContainer>
+        name="searchInput" type="text" placeholder={language === true ? 'Suche' : "Search"} />
+      <ItemContainer>
+        <SearchResults filteredItems={filteredList} handleChooseItem={onChooseItem} language={language} searchInput={searchInput}/>
+      </ItemContainer>
     </div>
   );
 }
@@ -71,27 +73,46 @@ function App() {
 export default App;
 
 const Heading = styled.h1`
-  position: relative;
+  margin: 10px 0;
+`
+
+const HeaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 18%;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  @media (min-width: 370px){
+    flex-wrap: nowrap;
+  }
 `
 
 const LanguageButton = styled.button`
-  position: absolute;
-  top: 20px;
-  right: 50px;
+  background-color: transparent;
+  border: unset;
+  &:hover {
+    cursor: pointer;
+  }
 `
 
-const SearchContainer = styled.div`
-  width: 50%;
+const ItemContainer = styled.div`
+  width: 65%;
   margin: 20px auto;
   display: flex;
-  justify-content: center;
+  justify-content: left;
   flex-wrap: wrap;
   gap: 5px;
+
+  p {
+    padding-left: 7px;
+  }
 `
 
 const SearchInput = styled.input`
-  margin-top: 20px;
-  width: 50%;
+  margin-top: 10px;
+  width: 60%;
   font-size: 1.3rem;
   padding: 10px;
   border-radius: 10px;
