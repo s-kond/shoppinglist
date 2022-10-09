@@ -13,6 +13,8 @@ function App() {
   const [filteredList, setFilteredList] = useState([]);
   const [recentlyUsed, setRecentlyUsed] = useState(loadLocalStorage("recentlyUsed") ?? []);
   const [language, setLanguage] = useState(true);
+  const [breadArray, setBreadArray] = useState([]);
+  const [fruitArray, setFruitArray] = useState([]);
 
   const itemApiUrl = "https://fetch-me.vercel.app/api/shopping/items"
 
@@ -21,6 +23,7 @@ function App() {
       const response = await fetch(itemApiUrl);
       const data = await response.json();
       let itemNamesArray = data.data;
+      console.log(data);
       fetchItemNames(itemNamesArray);
     }
     if(itemNames.length === 0){
@@ -42,6 +45,10 @@ function App() {
   }
 
   function onChooseItem(itemName){
+    if(itemName.category._ref === "c2hvcHBpbmcuY2F0ZWdvcnk6MA=="){
+      setFruitArray([itemName, ...fruitArray])}
+    if(itemName.category._ref === "c2hvcHBpbmcuY2F0ZWdvcnk6MQ=="){
+      setBreadArray([itemName, ...breadArray])};
     setActiveItems([...activeItemsList, itemName]);
     setFilteredList(filteredList.filter(item => item.name.de !== itemName.name.de));
     fetchItemNames(itemNames.filter(item => item.name.de !== itemName.name.de));
@@ -64,7 +71,7 @@ function App() {
       </LanguageButton>
       </HeaderContainer>
       <ItemContainer>
-        <ActiveItemList activeItems={activeItemsList} handleDeactivateItems={onDeactivateItems} language={language}/>
+        <ActiveItemList activeItems={activeItemsList} handleDeactivateItems={onDeactivateItems} language={language} breadArray={breadArray} fruitArray={fruitArray}/>
       </ItemContainer>
       {/* <Label htmlFor='searchInput'>{language=== true ? "Was möchtest du kaufen?" : "What do you want to buy?"}</Label> */}
       <SearchInput onChange={(event)=> setSearchInput(event.target.value)} 

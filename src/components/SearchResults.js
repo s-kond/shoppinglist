@@ -36,6 +36,7 @@ const Collapse = styled.details`
 `
 const RecentContainer = styled.section`
     display: flex;
+    flex-wrap: wrap;
     gap: 5px;
-    padding: 10px;
+    padding-top: 10px;
 `
